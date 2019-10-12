@@ -9,11 +9,11 @@ function lgraph = resnet101Layers()
 % Create the first five layers of the network. The network has an image
 % input size of 224-by-224-by-3.
 initialSection = [
-    imageInputLayer([224 224 3],"Name","data")
-    convolution2dLayer(7,64,"Stride",2,"Padding",3,"BiasLearnRateFactor",0,"Name","conv1")
-    batchNormalizationLayer("Name","bn_conv1")
-    reluLayer("Name","conv1_relu")
-    maxPooling2dLayer(3,"Stride",2,"Padding",[0 1 0 1],"Name","pool1")];
+    imageInputLayer([224 224 3],"Name",'data')
+    convolution2dLayer(7,64,"Stride",2,"Padding",3,"BiasLearnRateFactor",0,"Name",'conv1')
+    batchNormalizationLayer("Name",'bn_conv1')
+    reluLayer("Name",'conv1_relu')
+    maxPooling2dLayer(3,"Stride",2,"Padding",[0 1 0 1],"Name",'pool1')];
 lgraph = layerGraph(initialSection);
 
 % Use the function addAndConnectResNetSection to create a ResNet section
@@ -109,19 +109,20 @@ for i = 1:length(residualUnits)
     % Create the block of layers for the residual unit and add it to the
     % layer graph.
     resnetBlock = [
-        convolution2dLayer(1,numF1x1first,"Stride",stride,"Name",layerRoot+"_branch2a","BiasLearnRateFactor",0)
-        batchNormalizationLayer("Name",bnRoot+"_branch2a")
-        reluLayer("Name",layerRoot+"_branch2a_relu")
+        convolution2dLayer(1,numF1x1first,"Stride",stride,"Name",char(layerRoot+"_branch2a"),"BiasLearnRateFactor",0)
+        batchNormalizationLayer("Name",char(bnRoot+"_branch2a"))
+        reluLayer("Name",char(layerRoot+"_branch2a_relu"))
         
-        convolution2dLayer(3,numF3x3,"Padding",1,"Name",layerRoot+"_branch2b","BiasLearnRateFactor",0);
-        batchNormalizationLayer("Name",bnRoot+"_branch2b")
-        reluLayer("Name",layerRoot+"_branch2b_relu")
+        convolution2dLayer(3,numF3x3,"Padding",1,"Name",char(layerRoot+"_branch2b"),"BiasLearnRateFactor",0);
+        batchNormalizationLayer("Name",char(bnRoot+"_branch2b"))
+        reluLayer("Name",char(layerRoot+"_branch2b_relu"))
         
-        convolution2dLayer(1,numF1x1last,"Name",layerRoot+"_branch2c","BiasLearnRateFactor",0)
-        batchNormalizationLayer("Name",bnRoot+"_branch2c")
+        convolution2dLayer(1,numF1x1last,"Name",char(layerRoot+"_branch2c"),"BiasLearnRateFactor",0)
+        batchNormalizationLayer("Name",char(bnRoot+"_branch2c"))
         
         additionLayer(2,"Name",layerRoot)
-        reluLayer("Name",layerRoot+"_relu")];
+        reluLayer("Name",char(layerRoot+"_relu"))
+        ];
     
     lgraph = addLayers(lgraph,resnetBlock);
     
@@ -134,8 +135,9 @@ for i = 1:length(residualUnits)
     % residual units, connect to the previous residual unit.
     if i == 1
         projectionLayers = [
-            convolution2dLayer(1,numF1x1last,"Stride",stride,"Name",layerRoot+"_branch1","BiasLearnRateFactor",0)
-            batchNormalizationLayer("Name",bnRoot+"_branch1")];
+            convolution2dLayer(1,numF1x1last,"Stride",stride,"Name",char(layerRoot+"_branch1"),"BiasLearnRateFactor",0)
+            batchNormalizationLayer("Name",char(bnRoot+"_branch1"))
+            ];
         lgraph = addLayers(lgraph,projectionLayers);
         
         lgraph = connectLayers(lgraph,layerToConnectFrom,layerRoot+"_branch2a");
