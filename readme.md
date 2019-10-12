@@ -1,4 +1,4 @@
-Fork of resnet-101 frim https://github.com/matlab-deep-learning
+Fork of resnet-101 from https://github.com/matlab-deep-learning
 
 
 # Overview
